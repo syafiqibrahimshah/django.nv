@@ -25,7 +25,16 @@ jobs:
       - run:
           command: |
             echo "This is an integration step"
-            exit 1
+            exit 1 || true
+
+  artifact:
+    docker:
+      -image: python:3.6
+    steps:
+      - checkout
+      - run: 
+          command: |
+            echo "hello" > hello.txt
 
   prod:
     docker:
