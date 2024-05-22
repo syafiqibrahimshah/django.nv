@@ -16,3 +16,4 @@ job:
   script:
     - echo "I'm a job"
     - echo "I'm a job2"
+    - echo "im job no3"
