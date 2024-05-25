@@ -1,18 +1,16 @@
 version: 2.1
 
-jobs:
+commands:
   setup:
-    docker:
-      - image: python:3.6
     steps:
       - checkout
       - run: pip install -r requirements.txt
 
+jobs:
   build:
     docker:
       - image: python:3.6
     steps:
-      - checkout
       - setup
       - run: python manage.py check
 
@@ -20,7 +18,6 @@ jobs:
     docker:
       - image: python:3.6
     steps:
-      - checkout
       - setup
       - run: python manage.py test taskManager
 
@@ -28,7 +25,6 @@ jobs:
     machine: true
     steps:
       - checkout
-      - setup
       - run: |
           docker build -t $DOCKER_USERNAME/django.nv .
           docker push $DOCKER_USERNAME/django.nv
@@ -37,11 +33,11 @@ jobs:
     docker:
       - image: python:3.6
     steps:
-      - checkout
       - setup
       - run:
           command: |
             echo "This is an integration step"
+            exit 1
           when: always
 
   prod:
@@ -58,7 +54,7 @@ workflows:
       - build
       - test:
           requires:
-            - build 
+            - build
       - integration:
           requires:
             - test
