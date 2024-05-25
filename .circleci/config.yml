@@ -37,7 +37,8 @@ jobs:
       - run:
           command: |
             echo "This is an integration step"
-            when: always
+            exit 0
+          when: always
 
   prod:
     docker:
