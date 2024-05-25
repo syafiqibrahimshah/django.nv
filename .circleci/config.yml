@@ -29,12 +29,11 @@ jobs:
       - run:
          name: SonarCloud Scan
          command: | 
-             sonar-scanner \
+            sonar-scanner \
             -Dsonar.organization=syafiqibrahimshah \
             -Dsonar.projectKey=syafiqibrahimshah_django.nv \
             -Dsonar.sources=. \
-            -Dsonar.python.coverage.reportPaths=coverage.xml \
-            -Dsonar.coverage.exclusions=<CoverageExclusions>
+            -Dsonar.python.coverage.reportPaths=coverage.xml 
 
 workflows:
   version: 2
