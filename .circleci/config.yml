@@ -1,40 +1,49 @@
+version: 2.1
+
 jobs:
-  build:
+  setup:
     docker:
-      - image: python:3.6                   # similar to "image" in GitLab
+      - image: python:3.6
     steps:
       - checkout
-      - run: |                              # similar to "script" in GitLab
-          pip install -r requirements.txt
-          python manage.py check
+      - run: pip install -r requirements.txt
+
+  build:
+    docker:
+      - image: python:3.6
+    steps:
+      - checkout
+      - setup
+      - run: python manage.py check
 
   test:
     docker:
       - image: python:3.6
     steps:
       - checkout
-      - run: |
-          pip install -r requirements.txt
-          python manage.py test taskManager
+      - setup
+      - run: python manage.py test taskManager
 
   release:
-    machine: true                                        # What is this for?
+    machine: true
     steps:
       - checkout
+      - setup
       - run: |
-          docker build -t $DOCKER_USERNAME/django.nv .   # Build the application into Docker image
-          docker push $DOCKER_USERNAME/django.nv         # Push the image into registry
-  
+          docker build -t $DOCKER_USERNAME/django.nv .
+          docker push $DOCKER_USERNAME/django.nv
+
   integration:
     docker:
       - image: python:3.6
     steps:
       - checkout
+      - setup
       - run:
           command: |
             echo "This is an integration step"
             exit 1
-          when: always                    # Even if the job fails, continue to the next stages
+          when: always
 
   prod:
     docker:
