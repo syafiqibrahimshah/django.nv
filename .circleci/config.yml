@@ -29,7 +29,7 @@ jobs:
       - run:
          name: SonarCloud Scan
          command: | 
-            sonar-scanner \
+             sonar-scanner \
             -Dsonar.organization=syafiqibrahimshah \
             -Dsonar.projectKey=syafiqibrahimshah_django.nv \
             -Dsonar.sources=. \
