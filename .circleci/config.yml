@@ -21,31 +21,20 @@ jobs:
       - setup
       - run: python manage.py test taskManager
 
-  release:
-    machine: true
-    steps:
-      - checkout
-      - run: |
-          docker build -t $DOCKER_USERNAME/django.nv .
-          docker push $DOCKER_USERNAME/django.nv
-
-  integration:
+  sonarcloud-scan:
     docker:
-      - image: python:3.6
+      - image: sonarsource/sonar-scanner-cli:latest
     steps:
       - setup
       - run:
-          command: |
-            echo "This is an integration step"
-            exit 1
-          when: always
-
-  prod:
-    docker:
-      - image: python:3.6
-    steps:
-      - checkout
-      - run: echo "This is a deploy step."
+         name: SonarCloud Scan
+         command: | 
+            sonar-scanner \
+            -Dsonar.organization=syafiqibrahimshah \
+            -Dsonar.projectKey=syafiqibrahimshah_django.nv \
+            -Dsonar.sources=. \
+            -Dsonar.python.coverage.reportPaths=coverage.xml \
+            -Dsonar.coverage.exclusions=<CoverageExclusions>
 
 workflows:
   version: 2
@@ -55,10 +44,6 @@ workflows:
       - test:
           requires:
             - build
-      - integration:
+      - sonarcloud-scan:
           requires:
             - test
-      - prod:
-          type: approval
-          requires:
-            - integration
